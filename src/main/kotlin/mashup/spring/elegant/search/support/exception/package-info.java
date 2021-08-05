@@ -1,0 +1,1 @@
+package mashup.spring.elegant.search.support.exception;
