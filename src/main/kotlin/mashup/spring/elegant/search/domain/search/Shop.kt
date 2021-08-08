@@ -1,5 +1,6 @@
 package mashup.spring.elegant.search.domain.search
 
+import mashup.spring.elegant.search.dto.ShopDto
 import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
@@ -47,6 +48,29 @@ class Shop(
     val openHours : List<Open>
 
 ) {
+    companion object{
+        fun from(dto: ShopDto) : Shop = Shop(
+            id = dto.id,
+            category = dto.category,
+            shopName = dto.shopName,
+            review = dto.review,
+            createdDate = dto.createdDate,
+            menuList = dto.menuList,
+            deliveryTime = dto.deliveryTime,
+            deliveryTip = dto.deliveryTip,
+            deliveryArea = dto.deliveryArea,
+            minAmount = dto.minAmount,
+            location = dto.location,
+            openHours = dto.openHours
+        )
+    }
+
+
+
+
+    /**
+     * Inner class
+     */
 
     class Range(
         @Field(type = FieldType.Integer)
