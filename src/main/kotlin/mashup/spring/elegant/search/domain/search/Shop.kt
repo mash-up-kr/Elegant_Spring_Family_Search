@@ -14,38 +14,41 @@ class Shop(
     val id: Long,
 
     @Field(type = FieldType.Keyword)
-    val category: String,
+    var category: List<Category>,
 
     @Field(type = FieldType.Text)
-    val shopName: String,
+    var shopName: String,
 
     @Field(type = FieldType.Object)
-    val review: Review,
+    var review: Review,
 
     @Field(type = FieldType.Date, pattern = ["yyyy-MM-dd"])
-    val createdDate: String,
+    var createdDate: String,
 
     @Field(type = FieldType.Nested)
-    val menuList: List<Menu>,
+    var menuList: List<Menu>,
 
     @Field(type = FieldType.Integer_Range)
-    val deliveryTime: Range,
+    var deliveryTime: Range,
 
     @Field(type = FieldType.Integer_Range)
-    val deliveryTip: Range,
+    var deliveryTip: Range,
 
     @Field(type = FieldType.Keyword)
-    val deliveryArea: List<String>,
+    var deliveryArea: List<String>,
 
     @Field(type = FieldType.Integer)
-    val minAmount: Int,
+    var minAmount: Int,
 
     @Field(type = FieldType.Object)
     @GeoPointField
-    val location: GeoPoint,
+    var location: GeoPoint,
 
     @Field(type = FieldType.Object)
-    val openHours : List<Open>
+    var openHours : List<Open>,
+
+    @Field(type = FieldType.Boolean)
+    var takeOut : Boolean
 
 ) {
     companion object{
@@ -61,7 +64,8 @@ class Shop(
             deliveryArea = dto.deliveryArea,
             minAmount = dto.minAmount,
             location = dto.location,
-            openHours = dto.openHours
+            openHours = dto.openHours,
+            takeOut = dto.takeOut
         )
     }
 

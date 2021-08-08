@@ -1,5 +1,6 @@
 package mashup.spring.elegant.search.dto
 
+import mashup.spring.elegant.search.domain.search.Category
 import mashup.spring.elegant.search.domain.search.Shop
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.elasticsearch.core.geo.GeoPoint
@@ -10,7 +11,7 @@ data class ShopDto(
     @NotNull
     val id: Long,
     @NotNull
-    val category: String,
+    val category: List<Category>,
     @NotNull
     val shopName: String,
     @NotNull
@@ -30,7 +31,9 @@ data class ShopDto(
     @NotNull
     val location: GeoPoint,
     @NotNull
-    val openHours : List<Shop.Open>
+    val openHours : List<Shop.Open>,
+    @NotNull
+    val takeOut: Boolean
 
 ) {
 }
