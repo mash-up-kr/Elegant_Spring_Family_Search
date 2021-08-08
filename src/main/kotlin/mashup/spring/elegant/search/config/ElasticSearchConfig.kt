@@ -17,8 +17,4 @@ class ElasticSearchConfig (
     @Bean
     fun restHighLevelClient() : RestHighLevelClient = RestHighLevelClient(RestClient.builder(HttpHost(hostName, port, "http")))
 
-
-
-
-
 }
