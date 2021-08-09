@@ -83,10 +83,13 @@ class SearchService(
             .build()
 
         val result = ArrayList<SearchResult>()
-        val searchHits = template.search(buildQuery, SearchResult::class.java)
+        val searchHits = template.search(buildQuery, Shop::class.java)
+
+        //todo: Logger 교체
+        println(searchHits.getSearchHit(0).content.menu_list.get(0).name)
 
         for(hit in searchHits){
-            val id = hit.content.id
+            val id = hit.content.shop_id
             val score = hit.score
             result.add(SearchResult(id, score))
         }
