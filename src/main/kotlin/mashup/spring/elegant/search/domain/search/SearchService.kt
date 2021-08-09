@@ -1,10 +1,15 @@
 package mashup.spring.elegant.search.domain.search
 
-import mashup.spring.elegant.search.dto.Location
 import mashup.spring.elegant.search.dto.SearchResult
+import org.apache.lucene.util.QueryBuilder
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
+import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
-import org.springframework.data.elasticsearch.core.query.Criteria
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery
+import org.springframework.data.elasticsearch.core.SearchHits
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +25,7 @@ class SearchService(
 
         //todo: 쿼리 빌딩하고 등등
         //todo: 상수는 yml로 빼기
-        //keyword -> shopname, menu.name, menu.content
+        //keyword -> shopname-1, menu.name-2, menu.content-3
         //Delivery area 내에 현재 위치 있어야
         //todo: 위도경도->동으로 변환하는 api 호출하기
 
@@ -33,7 +38,56 @@ class SearchService(
          */
 
 
-        return arrayListOf()
+        val buildQuery = NativeSearchQueryBuilder()
+            .withQuery(
+                QueryBuilders
+                    .matchQuery("shop_name", keyword).boost(3.0f)
+            )
+            .withQuery(
+                QueryBuilders
+                    .matchQuery("menu.name", keyword).boost(2.0f)
+            )
+            .withQuery(
+                QueryBuilders
+                    .matchQuery("menu.content", keyword).boost(1.0f)
+            )
+            .withQuery(
+                QueryBuilders
+                    .boolQuery()
+                    .must(
+                        QueryBuilders
+                            .matchQuery("deliver_area", "미아동")
+                    )
+            )
+            .withQuery(
+                QueryBuilders
+                    .functionScoreQuery(
+                        FieldValueFactorFunctionBuilder("review.avg")
+                            .factor(3.0f)//magic number
+                            .modifier(FieldValueFactorFunction.Modifier.LOG)
+                    )
+            )
+            .withQuery(
+                QueryBuilders
+                    .functionScoreQuery(
+                        FieldValueFactorFunctionBuilder("review.count")
+                            .factor(2.0f)//magic number
+                            .modifier(FieldValueFactorFunction.Modifier.LOG)
+                    )
+            )
+            .withPageable(PageRequest.of(page,25))
+            .build()
+
+        val result = ArrayList<SearchResult>()
+        val searchHits = template.search(buildQuery, SearchResult::class.java)
+
+        for(hit in searchHits){
+            val id = hit.content.id
+            val score = hit.score
+            result.add(SearchResult(id, score))
+        }
+
+        return result
     }
 
     fun searchByCategory(keyword : String, lat: Long, lon: Long) : List<SearchResult>{
@@ -43,4 +97,6 @@ class SearchService(
 
         return arrayListOf()
     }
+
+
 }
