@@ -2,13 +2,10 @@ package mashup.spring.elegant.search.domain.search
 
 import mashup.spring.elegant.search.dto.ShopDto
 import org.springframework.data.annotation.Id
-import org.springframework.data.elasticsearch.annotations.Document
-import org.springframework.data.elasticsearch.annotations.Field
-import org.springframework.data.elasticsearch.annotations.FieldType
-import org.springframework.data.elasticsearch.annotations.GeoPointField
+import org.springframework.data.elasticsearch.annotations.*
 import org.springframework.data.elasticsearch.core.geo.GeoPoint
 
-@Document(indexName = "shop")
+@Document(indexName = "shop_repo2")
 class Shop(
     @Id
     val id: Long,
@@ -16,16 +13,16 @@ class Shop(
     @Field(type = FieldType.Keyword)
     var category: List<Category>,
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, name = "shop_name")
     var shopName: String,
 
     @Field(type = FieldType.Object)
     var review: Review,
 
-    @Field(type = FieldType.Date, pattern = ["yyyy-MM-dd"])
+    @Field(type = FieldType.Date, format = [DateFormat.year_month_day])
     var createdDate: String,
 
-    @Field(type = FieldType.Nested)
+    @Field(type = FieldType.Auto)
     var menuList: List<Menu>,
 
     @Field(type = FieldType.Integer_Range)
@@ -44,7 +41,7 @@ class Shop(
     @GeoPointField
     var location: GeoPoint,
 
-    @Field(type = FieldType.Object)
+    @Field(type = FieldType.Auto)
     var openHours : List<Open>,
 
     @Field(type = FieldType.Boolean)
@@ -77,9 +74,9 @@ class Shop(
      */
 
     class Range(
-        @Field(type = FieldType.Integer)
+        @Field(type = FieldType.Integer, name = "gte")
         val gte : Int,
-        @Field(type = FieldType.Integer)
+        @Field(type = FieldType.Integer, name = "lte")
         val lte : Int
     ){}
 

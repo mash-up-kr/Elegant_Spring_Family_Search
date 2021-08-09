@@ -18,10 +18,11 @@ class SearchController (
     fun searchByKeyword(
         @PathVariable keyword : String,
         @RequestParam lat : Long,
-        @RequestParam lon : Long
+        @RequestParam lon : Long,
+        @RequestParam page : Int
     ) : ResponseEntity<Any>{
 
-        val searchByKeyword : List<SearchResult> = searchService.searchByKeyword(keyword, lat, lon)
+        val searchByKeyword : List<SearchResult> = searchService.searchByKeyword(keyword, lat, lon, page)
 
         //todo: 로깅하고 응답 가공하고 이것저것하기
         //todo: 25개 페이징 처리도 필요
