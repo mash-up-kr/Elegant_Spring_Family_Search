@@ -15,6 +15,9 @@ class ElasticSearchConfig (
 ){
     // Elastic Search 와 통신하기 위한 rest client
     @Bean
-    fun restHighLevelClient() : RestHighLevelClient = RestHighLevelClient(RestClient.builder(HttpHost(hostName, port, "http")))
+    fun restHighLevelClient() : RestHighLevelClient =
+        RestHighLevelClient(RestClient
+                                .builder(
+                                    HttpHost(hostName, port, "http")))
 
 }

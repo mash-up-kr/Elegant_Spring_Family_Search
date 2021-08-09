@@ -1,9 +1,9 @@
 package mashup.spring.elegant.search.domain.search
-import org.springframework.data.annotation.Id
+
 import org.springframework.data.elasticsearch.annotations.*
 import org.springframework.data.elasticsearch.core.geo.GeoPoint
 
-@Document(indexName = "shop3")
+@Document(indexName = "shop_test")
 class Shop(
     @Field(type = FieldType.Auto, name = "shop_id")
     var shop_id: Long,
