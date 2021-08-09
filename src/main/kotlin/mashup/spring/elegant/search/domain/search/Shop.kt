@@ -16,7 +16,7 @@ class Shop(
     @Field(type = FieldType.Auto, name = "created_date")
     var created_date: String,
     @Field(type = FieldType.Auto, name = "menu")
-    var menu_list: List<Menu>,
+    var menu: List<Menu>,
     @Field(type = FieldType.Auto, name = "delivery_time")
     var delivery_time: Range,
     @Field(type = FieldType.Auto, name = "delivery_tip")
@@ -28,7 +28,7 @@ class Shop(
     @Field(type = FieldType.Auto, name = "location")
     var location: GeoPoint,
     @Field(type = FieldType.Auto, name = "open_hour")
-    var open_hours : List<Open>,
+    var open_hour : List<Open>,
     @Field(type = FieldType.Auto, name = "take_out")
     var take_out : Boolean
 

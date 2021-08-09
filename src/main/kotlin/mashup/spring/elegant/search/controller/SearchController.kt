@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
-
 @RequestMapping("/api/v1/search")
 @RestController
 class SearchController (
@@ -27,7 +26,6 @@ class SearchController (
             searchService.searchByKeyword(keyword, lat, lon, dong, page)
 
         //todo: 로깅하고 응답 가공하고 이것저것하기
-        //todo: 25개 페이징 처리도 필요
 
         return ResponseEntity.ok(searchByKeyword)
     }
@@ -42,7 +40,6 @@ class SearchController (
         val searchByCategory : List<SearchResult> = searchService.searchByCategory(category, lat, lon)
 
         //todo: 로깅하고 응답 가공하고 이것저것하기
-        //todo: 페이징
         return ResponseEntity.ok(searchByCategory)
     }
 
