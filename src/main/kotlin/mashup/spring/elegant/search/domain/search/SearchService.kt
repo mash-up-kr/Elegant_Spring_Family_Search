@@ -21,7 +21,11 @@ class SearchService(
 ) {
 
 
-    fun searchByKeyword(keyword : String, lat: Long, lon: Long, page : Int) : List<SearchResult>{
+    fun searchByKeyword(keyword : String,
+                        lat: Double,
+                        lon: Double,
+                        dong: String,
+                        page : Int) : List<SearchResult>{
 
         //todo: 쿼리 빌딩하고 등등
         //todo: 상수는 yml로 빼기
@@ -56,7 +60,7 @@ class SearchService(
                     .boolQuery()
                     .must(
                         QueryBuilders
-                            .matchQuery("deliver_area", "미아동")
+                            .matchQuery("deliver_area", "dong")
                     )
             )
             .withQuery(
@@ -90,7 +94,7 @@ class SearchService(
         return result
     }
 
-    fun searchByCategory(keyword : String, lat: Long, lon: Long) : List<SearchResult>{
+    fun searchByCategory(keyword : String, lat: Double, lon: Double) : List<SearchResult>{
 
 
         // todo: 쿼리 빌딩하고 응답 예쁘게 만들어주기

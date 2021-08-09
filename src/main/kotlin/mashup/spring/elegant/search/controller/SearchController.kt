@@ -17,12 +17,14 @@ class SearchController (
     @GetMapping("/keyword/{keyword}")
     fun searchByKeyword(
         @PathVariable keyword : String,
-        @RequestParam lat : Long,
-        @RequestParam lon : Long,
+        @RequestParam lat : Double,
+        @RequestParam lon : Double,
+        @RequestParam dong: String,
         @RequestParam page : Int
     ) : ResponseEntity<Any>{
 
-        val searchByKeyword : List<SearchResult> = searchService.searchByKeyword(keyword, lat, lon, page)
+        val searchByKeyword : List<SearchResult> =
+            searchService.searchByKeyword(keyword, lat, lon, dong, page)
 
         //todo: 로깅하고 응답 가공하고 이것저것하기
         //todo: 25개 페이징 처리도 필요
@@ -30,11 +32,11 @@ class SearchController (
         return ResponseEntity.ok(searchByKeyword)
     }
 
-    @GetMapping("/keyword/{category}")
+    @GetMapping("/category/{category}")
     fun searchByCategory(
         @PathVariable category : String,
-        @RequestParam lat : Long,
-        @RequestParam lon : Long
+        @RequestParam lat : Double,
+        @RequestParam lon : Double
     ) : ResponseEntity<Any>{
 
         val searchByCategory : List<SearchResult> = searchService.searchByCategory(category, lat, lon)
