@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.streams.toList
 
 
 @Transactional(readOnly = true)
@@ -47,18 +48,12 @@ class SearchService(
 
 
 
-        // todo: functional 하게 수정하기
         val searchHits = template.search(NativeSearchQuery(queryBuilder), Shop::class.java)
 
-        val result = ArrayList<SearchResult>()
+        return searchHits.stream()
+            .map {SearchResult(it.content.shop_id, it.score)}
+            .toList()
 
-        for(hit in searchHits){
-            val id = hit.content.shop_id
-            val score = hit.score
-            result.add(SearchResult(id, score))
-        }
-
-        return result
     }
 
     fun searchByCategory(dto : SearchDto) : List<SearchResult>{
