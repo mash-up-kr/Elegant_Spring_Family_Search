@@ -1,0 +1,119 @@
+PUT /shop_test
+{
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 0,
+    "index": {
+      "analysis": {
+        "tokenizer": {
+          "nori_tokenizer_mixed": {
+            "type": "nori_tokenizer",
+            "decompound_mode": "mixed"
+          }
+        },
+        "analyzer": {
+          "korean": {
+            "type": "custom",
+            "tokenizer": "nori_tokenizer_mixed",
+            "filter": [
+              "nori_readingform",
+              "lowercase",
+              "nori_part_of_speech_basic"
+            ]
+          }
+        },
+        "filter": {
+          "nori_part_of_speech_basic": {
+            "type": "nori_part_of_speech",
+            "stoptags": [
+              "E",
+              "IC",
+              "J",
+              "MAG",
+              "MAJ",
+              "MM",
+              "SP",
+              "SSC",
+              "SSO",
+              "SC",
+              "SE",
+              "XPN",
+              "XSA",
+              "XSN",
+              "XSV",
+              "UNA",
+              "NA",
+              "VSV"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "shop_id": {
+        "type": "long"
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "shop_name": {
+        "type": "text",
+        "analyzer": "korean"
+      },
+      "review": {
+        "properties":{
+          "avg": {
+            "type": "float"
+          },
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "created_date": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "menu": {
+        "properties": {
+          "name": {
+            "type": "text"
+          },
+          "content": {
+            "type": "text"
+          }
+        }
+      },
+      "delivery_time": {
+        "type": "integer_range"
+      },
+      "delivery_tip": {
+        "type": "integer_range"
+      },
+      "delivery_area": {
+        "type": "keyword"
+      },
+      "min_amount":{
+        "type": "integer"
+      },
+      "location":{
+        "type": "geo_point"
+      },
+      "open_hour": {
+       "properties": {
+         "week": {
+           "type": "keyword"
+         },
+         "hour": {
+           "type": "integer_range"
+         }
+       }
+      },
+      "take_out": {
+        "type": "boolean"
+      }
+    }
+  }
+}

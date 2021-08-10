@@ -1,1 +1,29 @@
+es:
+  url: localhost
+  port: 9200
 
+# 유레카 클라이언트 아직 사용 X
+eureka:
+  client:
+    enabled: false
+
+#유레카 사용 시 설정들
+#server:
+#  port: 0
+#
+#spring:
+#  application:
+#    name: search-service
+#
+#eureka:
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka
+
+
+server:
+  echo: 엄준식은 살아있다.

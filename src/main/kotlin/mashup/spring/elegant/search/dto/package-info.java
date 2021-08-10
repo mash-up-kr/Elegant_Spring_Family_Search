@@ -1,1 +1,0 @@
-package mashup.spring.elegant.search.dto;
