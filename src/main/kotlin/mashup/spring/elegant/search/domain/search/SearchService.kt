@@ -6,8 +6,10 @@ import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.streams.toList
@@ -24,9 +26,11 @@ class SearchService(
 
         val keyword = dto.term
         val area = dto.area
+        val lat = dto.lat
+        val lon = dto.lon
+        val page = dto.page
 
         //todo : boost parameter 등 책임 분리 필요
-        //todo : dto 위도 경도 기반 검색 쿼리 추가 필요
         val queryBuilder = QueryBuilders
             .functionScoreQuery(
                 QueryBuilders.boolQuery()
@@ -37,6 +41,11 @@ class SearchService(
                     .should(
                         QueryBuilders
                             .matchQuery("menu.content", keyword).boost(1.0f))
+                    .should(
+                        QueryBuilders.geoDistanceQuery("location")
+                            .distance("5km")
+                            .point(lat,lon)
+                    )
                     .must(
                         QueryBuilders
                             .matchQuery("delivery_area", area)
@@ -48,12 +57,12 @@ class SearchService(
 
 
 
-        val searchHits = template.search(NativeSearchQuery(queryBuilder), Shop::class.java)
-
-        return searchHits.stream()
-            .map {SearchResult(it.content.shop_id, it.score)}
-            .toList()
-
+        return template.search(NativeSearchQueryBuilder()
+                                .withQuery(queryBuilder)
+                                .withPageable(PageRequest.of(page,25)).build(), Shop::class.java)
+                        .stream()
+                        .map {SearchResult(it.content.shop_id, it.score)}
+                        .toList()
     }
 
     fun searchByCategory(dto : SearchDto) : List<SearchResult>{
