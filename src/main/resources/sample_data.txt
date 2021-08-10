@@ -1,0 +1,77 @@
+POST /shop_test/_doc
+{
+	"shop_id": 1,
+	"category": "한식",
+	"created_date": "2020-03-12",
+	"delivery_area": ["미아동","삼양동"],
+	"delivery_time": {
+	  "gte": 20,
+	  "lte": 30
+	},
+	"delivery_tip": {
+	  "gte": 500,
+	  "lte": 3000
+	},
+	"location": {
+	  "lat": 37.540669,
+	  "lon": 127.078824
+	},
+	"menu": [
+	  {
+	    "name": "신공학관 구이",
+	    "content": "언제나 맛있는 구워삶은 대학원생"
+	  },
+	  {
+	    "name": "공학관 양념구이",
+	    "content": "싱싱한 양념 당하는 학부생"
+	  },
+	  {
+	    "name": "찰리",
+	    "content": "고양이 찰리는 귀여워"
+	  }
+	],
+	"min_amount": 13000,
+	"open_hour": [
+	  {
+	    "week": "월요일",
+	    "hour": {
+	      "gte": 8,
+	      "lte": 20
+	    }
+	  },
+	  {
+	    "week": "화요일",
+	    "hour": {
+	      "gte": 8,
+	      "lte": 20
+	    }
+	  },
+	  {
+	    "week": "수요일",
+	    "hour": {
+	      "gte": 8,
+	      "lte": 20
+	    }
+	  },
+	  {
+	    "week": "목요일",
+	    "hour": {
+	      "gte": 8,
+	      "lte": 22
+	    }
+	  },
+	  {
+	    "week": "금요일",
+	    "hour": {
+	      "gte": 8,
+	      "lte": 22
+	    }
+	  }
+	],
+	"review": {
+	  "avg": 4.7,
+	  "count": 133
+	},
+	"shop_name": "신공학관 1호점",
+    "take_out": true
+}
