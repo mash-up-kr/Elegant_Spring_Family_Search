@@ -17,13 +17,12 @@ class SearchController (
 ){
 
     @GetMapping("/keyword")
-    fun searchByKeyword(
-        @Valid dto : SearchDto
-    ) : ResponseEntity<Any>{
+    fun searchByKeyword(@Valid dto : SearchDto) : ResponseEntity<Any>{
+
         val searchByKeyword : List<SearchResult> =
             searchService.searchByKeyword(dto)
 
-        //todo: 로깅하고 응답 래핑하고 이것저것하기
+        //todo: 로깅하고 응답 래핑하고 키워드 검색 로깅하고 이것저것하기
         return ResponseEntity.ok(searchByKeyword)
     }
 
