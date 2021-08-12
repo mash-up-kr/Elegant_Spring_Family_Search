@@ -1,6 +1,7 @@
 package mashup.spring.elegant.search.domain.search
 
 import mashup.spring.elegant.search.controller.SearchController.*
+import mashup.spring.elegant.search.domain.search.ShopField.*
 import mashup.spring.elegant.search.dto.SearchResult
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery
@@ -20,6 +21,10 @@ import kotlin.streams.toList
 class SearchService(
     private val template : ElasticsearchRestTemplate
 ) {
+    companion object{
+        const val defaultPageSize =  25
+
+    }
 
 
     fun searchByKeyword(dto : SearchDto) : List<SearchResult>{
@@ -30,36 +35,42 @@ class SearchService(
         val lon = dto.lon
         val page = dto.page
 
+
+
         //todo : boost parameter 등 책임 분리 필요
         val queryBuilder = QueryBuilders
             .functionScoreQuery(
                 QueryBuilders.boolQuery()
-                    .should(QueryBuilders
-                                .matchQuery("shop_name", keyword).boost(5.0f))
-                    .should(QueryBuilders
-                                .matchQuery("menu.name", keyword).boost(2.0f))
                     .should(
                         QueryBuilders
-                            .matchQuery("menu.content", keyword).boost(1.0f))
+                            .matchQuery(SHOP_NAME.field, keyword).boost(5.0f))
                     .should(
-                        QueryBuilders.geoDistanceQuery("location")
+                        QueryBuilders
+                            .matchQuery(MENU_NAME.field, keyword).boost(2.0f))
+                    .should(
+                        QueryBuilders
+                            .matchQuery(MENU_CONTENT.field, keyword).boost(1.0f))
+                    .should(
+                        QueryBuilders.geoDistanceQuery(LOCATION.field)
                             .distance("5km")
                             .point(lat,lon)
+                            .boost(1.0f)
                     )
                     .must(
                         QueryBuilders
-                            .matchQuery("delivery_area", area)
-                    ),
-                FieldValueFactorFunctionBuilder("review.count")
+                            .matchQuery(DELIVERY_AREA.field, area))
+                ,
+                FieldValueFactorFunctionBuilder(REVIEW_COUNT.field)
                     .factor(1.0f)  //magic number
-                    .modifier(FieldValueFactorFunction.Modifier.LOG))
+                    .modifier(FieldValueFactorFunction.Modifier.LOG)
+            )
             .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY)
 
 
 
         return template.search(NativeSearchQueryBuilder()
                                 .withQuery(queryBuilder)
-                                .withPageable(PageRequest.of(page,25)).build(), Shop::class.java)
+                                .withPageable(PageRequest.of(page,defaultPageSize)).build(), Shop::class.java)
                         .stream()
                         .map {SearchResult(it.content.shop_id, it.score)}
                         .toList()
