@@ -1,10 +1,8 @@
 package mashup.spring.elegant.search.domain.search
 
-import mashup.spring.elegant.search.controller.SearchController.*
 import mashup.spring.elegant.search.domain.search.ShopField.*
-import mashup.spring.elegant.search.dto.SearchResult
+import mashup.spring.elegant.search.dto.SearchDto.*
 import mashup.spring.elegant.search.util.translateDay
-import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery.*
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders.*
@@ -18,9 +16,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
-import javax.annotation.PostConstruct
-import javax.validation.Valid
-
 
 @Transactional(readOnly = true)
 @Service
@@ -55,7 +50,7 @@ class SearchService(
      */
 
 
-    fun searchByKeyword(dto : SearchDto) : List<SearchResult>{
+    fun searchByKeyword(dto : Request) : List<Result>{
 
 
         /**
@@ -104,7 +99,7 @@ class SearchService(
 
 
 
-    fun searchByCategory(dto : SearchDto) : List<SearchResult>{
+    fun searchByCategory(dto : Request) : List<Result>{
 
 
         // todo: 쿼리 빌딩하고 응답 예쁘게 만들어주기

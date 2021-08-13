@@ -1,11 +1,10 @@
 package mashup.spring.elegant.search.domain.search
 
-import mashup.spring.elegant.search.dto.SearchResult
+import mashup.spring.elegant.search.dto.SearchDto
 import org.springframework.data.elasticsearch.core.SearchHits
-import org.springframework.stereotype.Component
 
 interface ResultMapper {
 
-    fun map(hits : SearchHits<Shop>): List<SearchResult>
+    fun map(hits : SearchHits<Shop>): List<SearchDto.Result>
 
 }
