@@ -4,8 +4,10 @@ import mashup.spring.elegant.search.dto.IdScoreSearchResult
 import org.springframework.context.annotation.Primary
 import org.springframework.data.elasticsearch.core.SearchHits
 import org.springframework.stereotype.Component
+import javax.inject.Qualifier
 import kotlin.streams.toList
 
+@Component
 @Primary
 class IdScoreMapper : ResultMapper{
 

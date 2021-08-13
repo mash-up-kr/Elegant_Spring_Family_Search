@@ -5,15 +5,16 @@ import mashup.spring.elegant.search.domain.search.ShopField.*
 import mashup.spring.elegant.search.dto.SearchResult
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery
-import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.query.QueryBuilders.*
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.*
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.streams.toList
+
 
 
 @Transactional(readOnly = true)
@@ -36,37 +37,33 @@ class SearchService(
         val lon = dto.lon
         val page = dto.page
 
+        val searchQueryBuilder = boolQuery()
+            .should(
+                matchQuery(SHOP_NAME.field, keyword).boost(5.0f))
+            .should(
+                matchQuery(MENU_NAME.field, keyword).boost(2.0f))
+            .should(
+                matchQuery(MENU_CONTENT.field, keyword).boost(1.0f))
+            .should(
+                geoDistanceQuery(LOCATION.field)
+                    .distance("5km")
+                    .point(lat,lon)
+                    .boost(1.0f))
+            .must(
+                matchQuery(DELIVERY_AREA.field, area))
 
+        val functions = arrayOf(
+            FilterFunctionBuilder(FieldValueFactorFunctionBuilder(REVIEW_COUNT.field)
+                                    .factor(1.0f)  //magic number
+                                    .modifier(FieldValueFactorFunction.Modifier.LOG1P)),
+            FilterFunctionBuilder(ScoreFunctionBuilders
+                                      .linearDecayFunction(REVIEW_AVG.field,5,1,1,0.75))
+        )
 
         //todo : boost parameter 등 책임 분리 필요
-        val queryBuilder = QueryBuilders
-            .functionScoreQuery(
-                QueryBuilders.boolQuery()
-                    .should(
-                        QueryBuilders
-                            .matchQuery(SHOP_NAME.field, keyword).boost(5.0f))
-                    .should(
-                        QueryBuilders
-                            .matchQuery(MENU_NAME.field, keyword).boost(2.0f))
-                    .should(
-                        QueryBuilders
-                            .matchQuery(MENU_CONTENT.field, keyword).boost(1.0f))
-                    .should(
-                        QueryBuilders.geoDistanceQuery(LOCATION.field)
-                            .distance("5km")
-                            .point(lat,lon)
-                            .boost(1.0f)
-                    )
-                    .must(
-                        QueryBuilders
-                            .matchQuery(DELIVERY_AREA.field, area))
-                ,
-                FieldValueFactorFunctionBuilder(REVIEW_COUNT.field)
-                    .factor(1.0f)  //magic number
-                    .modifier(FieldValueFactorFunction.Modifier.LOG)
-            )
+        val queryBuilder =
+           functionScoreQuery(searchQueryBuilder,functions)
             .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY)
-
 
         val result = template.search(
                                                 NativeSearchQueryBuilder()

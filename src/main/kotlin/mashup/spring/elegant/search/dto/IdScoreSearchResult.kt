@@ -1,8 +1,8 @@
 package mashup.spring.elegant.search.dto
 
 class IdScoreSearchResult (
-    private val shopId : Long,
-    private val score : Float
+    shopId : Long,
+    val score : Float
 ): SearchResult(shopId){
 
 }

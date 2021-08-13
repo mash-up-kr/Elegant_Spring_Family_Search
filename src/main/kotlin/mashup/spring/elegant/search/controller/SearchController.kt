@@ -31,7 +31,6 @@ class SearchController (
     ) : ResponseEntity<Any>{
 
         val searchByCategory : List<SearchResult> = searchService.searchByCategory(dto)
-
         //todo: 로깅하고 응답 가공하고 이것저것하기
         return ResponseEntity.ok(searchByCategory)
     }
