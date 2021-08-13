@@ -11,7 +11,6 @@ import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders
  * 파라미터 없는 쿼리
  */
 
-
 fun getReviewBooster()  = arrayOf(
     FunctionScoreQueryBuilder.FilterFunctionBuilder(
         FieldValueFactorFunctionBuilder(ShopField.REVIEW_COUNT.field)
@@ -21,5 +20,13 @@ fun getReviewBooster()  = arrayOf(
     FunctionScoreQueryBuilder.FilterFunctionBuilder(
         ScoreFunctionBuilders
             .linearDecayFunction(ShopField.REVIEW_AVG.field, 5, 1, 1, 0.75)
+    )
+)
+
+fun getNewShopBooster () = arrayOf(
+    FunctionScoreQueryBuilder.FilterFunctionBuilder(
+        QueryBuilders.rangeQuery(ShopField.CREATED_DATE.field).gte("now-28d").lte("now"),
+        ScoreFunctionBuilders
+            .gaussDecayFunction(ShopField.CREATED_DATE.field, "now", "14d", "14d", 0.2)
     )
 )

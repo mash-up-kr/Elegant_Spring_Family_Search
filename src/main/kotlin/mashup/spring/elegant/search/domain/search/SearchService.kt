@@ -3,16 +3,21 @@ package mashup.spring.elegant.search.domain.search
 import mashup.spring.elegant.search.controller.SearchController.*
 import mashup.spring.elegant.search.domain.search.ShopField.*
 import mashup.spring.elegant.search.dto.SearchResult
+import mashup.spring.elegant.search.util.translateDay
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery
+import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery.*
+import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders.*
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.*
+import org.joda.time.LocalDateTime
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
+import java.time.LocalDate
+import javax.validation.Valid
 
 
 @Transactional(readOnly = true)
@@ -24,6 +29,7 @@ class SearchService(
     companion object{
         const val DEFAULT_PAGE_SIZE =  25
         val reviewFunctions = getReviewBooster()
+        val newShopFunctions = getNewShopBooster()
 
         /**
          *  Keyword Search Boost
@@ -33,6 +39,11 @@ class SearchService(
         const val MENU_CONTENT_BOOST = 5.0f
         const val LOCATION_BOOST = 5.0f
         const val LOCATION_LIMIT = "5km"
+
+        /**
+         * Category Search Boost
+         */
+
     }
 
 
@@ -49,9 +60,16 @@ class SearchService(
         val page = dto.page
 
         /**
+         * Building Boost Function List
+         */
+        val functions : ArrayList<FilterFunctionBuilder> = ArrayList()
+        functions.addAll(reviewFunctions)
+        functions.addAll(newShopFunctions)
+
+        /**
          * Building Keyword Search Query
          */
-        val searchQueryBuilder = boolQuery()
+        val query = boolQuery()
             .should(
                 matchQuery(SHOP_NAME.field, keyword).boost(SHOP_NAME_BOOST))
             .should(
@@ -63,27 +81,14 @@ class SearchService(
                     .distance(LOCATION_LIMIT)
                     .point(lat,lon)
                     .boost(LOCATION_BOOST))
-            .must(
-                matchQuery(DELIVERY_AREA.field, area))
+            .addRequiredConditions(area)
+            .toFunctionQuery(functions, ScoreMode.SUM)
+            .makeSearchQuery(page)
 
-        /**
-         * Building Boost Function List
-         */
-        val functions : ArrayList<FilterFunctionBuilder> = ArrayList()
-        functions.addAll(reviewFunctions)
-
-        /**
-         * Query 와 Score Function 조합
-         */
-        val queryBuilder =functionScoreQuery(
-                                                        searchQueryBuilder,
-                                                        functions.toTypedArray()
-                                                    )
-                                                    .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY)
         /**
          * 검색 실행
          */
-        val result = template.search(makeSearchQuery(queryBuilder, page),Shop::class.java)
+        val result = template.search(query,Shop::class.java)
 
         return mapper.map(result)
     }
@@ -102,14 +107,29 @@ class SearchService(
 
 
 
-    private fun makeSearchQuery(queryBuilder: FunctionScoreQueryBuilder, page: Int) = NativeSearchQueryBuilder()
-        .withQuery(queryBuilder)
-        .withPageable(
-            PageRequest.of(page, DEFAULT_PAGE_SIZE)
-        )
-        .build()
+
+    private fun FunctionScoreQueryBuilder.makeSearchQuery(page: Int)
+        = NativeSearchQueryBuilder()
+            .withQuery(this)
+            .withPageable(
+                PageRequest.of(page, DEFAULT_PAGE_SIZE)
+            )
+            .build()
 
 
+    private fun BoolQueryBuilder.addRequiredConditions(area: String)
+       = this.must(matchQuery(DELIVERY_AREA.field, area))
+        .must(matchQuery(OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
+        .must(rangeQuery(OPEN_HOUR_HOUR.field)
+                  .gte(LocalDateTime.now().hourOfDay)
+                  .lte(LocalDateTime.now().hourOfDay)
+                  .relation("contains"))
+
+
+
+    private fun BoolQueryBuilder.toFunctionQuery(functions :ArrayList<FilterFunctionBuilder>,
+                                                 mode: ScoreMode = ScoreMode.SUM)
+        =functionScoreQuery(this, functions.toTypedArray()).scoreMode(mode)
 
 
 }

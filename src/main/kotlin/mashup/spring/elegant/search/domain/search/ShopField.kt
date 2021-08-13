@@ -17,7 +17,8 @@ enum class ShopField (
     DELIVERY_AREA("delivery_area"),
     MIN_AMOUNT("min_amount"),
     LOCATION("location"),
-    OPEN_HOUR("open_hour"),
+    OPEN_HOUR_WEEK("open_hour.week"),
+    OPEN_HOUR_HOUR("open_hour.hour"),
     TAKE_OUT("take_out");
 
 
