@@ -11,12 +11,14 @@ import org.elasticsearch.index.query.QueryBuilders.*
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.*
 import org.joda.time.LocalDateTime
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import javax.annotation.PostConstruct
 import javax.validation.Valid
 
 
@@ -25,33 +27,39 @@ import javax.validation.Valid
 class SearchService(
     private val template : ElasticsearchRestTemplate,
     private val mapper : ResultMapper,
+    booster : BoostFunction
 ) {
     companion object{
         const val DEFAULT_PAGE_SIZE =  25
-        val reviewFunctions = getReviewBooster()
-        val newShopFunctions = getNewShopBooster()
-
-        /**
-         *  Keyword Search Boost
-         */
-        const val SHOP_NAME_BOOST = 5.0f
-        const val MENU_NAME_BOOST = 5.0f
-        const val MENU_CONTENT_BOOST = 5.0f
-        const val LOCATION_BOOST = 5.0f
-        const val LOCATION_LIMIT = "5km"
-
-        /**
-         * Category Search Boost
-         */
-
     }
+
+    /**
+     *  Keyword Search Boost
+     */
+    @Value("\${search.keyword.boost.shop_name}")
+    private val SHOP_NAME_BOOST = 0f
+    @Value("\${search.keyword.boost.menu_name}")
+    private val MENU_NAME_BOOST = 0f
+    @Value("\${search.keyword.boost.menu_content}")
+    private val MENU_CONTENT_BOOST = 0f
+    @Value("\${search.keyword.boost.location}")
+    private val LOCATION_BOOST = 0f
+    @Value("\${search.keyword.location.limit}")
+    private val LOCATION_LIMIT = "0km"
+
+    private val reviewFunctions by lazy { booster.getReviewBooster() }
+    private val newShopFunctions by lazy { booster.getNewShopBooster() }
+
+    /**
+     * Category Search Boost
+     */
 
 
     fun searchByKeyword(dto : SearchDto) : List<SearchResult>{
 
 
         /**
-         * DTO 중 사용 안하는 필드 IDE 가 체크
+         * DTO 중 사용 안하는 필드를 IDE 가 체크
          */
         val keyword = dto.term
         val area = dto.area
@@ -81,7 +89,7 @@ class SearchService(
                     .distance(LOCATION_LIMIT)
                     .point(lat,lon)
                     .boost(LOCATION_BOOST))
-            .addRequiredConditions(area)
+            .addRequiredConditions(area) // 배달가능지역, 오픈시간 체크
             .toFunctionQuery(functions, ScoreMode.SUM)
             .makeSearchQuery(page)
 

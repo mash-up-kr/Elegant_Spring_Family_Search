@@ -27,3 +27,30 @@ eureka:
 
 server:
   echo: 엄준식은 살아있다.
+
+search:
+  keyword:
+    boost:
+      shop_name: 5.0f
+      menu_name: 3.0f
+      menu_content: 2.0f
+      location: 3.0f
+    location:
+      limit: 5km
+  review:
+    count:
+      factor: 1.0f
+    avg:
+      origin: 5
+      scale: 1
+      offset: 1
+      decay: 0.75
+  new_shop:
+    filter:
+      from: now-28d
+      to: now
+    score:
+      origin: now
+      scale: 14d
+      offset: 14d
+      decay: 0.2
