@@ -137,7 +137,7 @@ class SearchService(
 
     private fun BoolQueryBuilder.toFunctionQuery(functions :ArrayList<FilterFunctionBuilder>,
                                                  mode: ScoreMode = ScoreMode.SUM)
-        =functionScoreQuery(this, functions.toTypedArray()).scoreMode(mode)
+        = functionScoreQuery(this, functions.toTypedArray()).scoreMode(mode)
 
 
 }
