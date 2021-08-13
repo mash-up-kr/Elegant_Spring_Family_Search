@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.QueryBuilders.*
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.*
 import org.joda.time.LocalDateTime
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
@@ -21,6 +22,7 @@ import java.time.LocalDate
 @Service
 class SearchService(
     private val template : ElasticsearchRestTemplate,
+    @Qualifier("IdScoreMapper")
     private val mapper : ResultMapper,
     booster : BoostFunction
 ) {

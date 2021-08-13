@@ -7,8 +7,7 @@ import org.springframework.data.elasticsearch.core.SearchHits
 import org.springframework.stereotype.Component
 import kotlin.streams.toList
 
-@Component
-@Primary
+@Component("IdScoreMapper")
 class IdScoreMapper : ResultMapper{
 
     override fun map(hits: SearchHits<Shop>) = hits.stream()
