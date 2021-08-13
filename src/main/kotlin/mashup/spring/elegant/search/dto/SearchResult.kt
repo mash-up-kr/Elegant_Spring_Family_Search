@@ -1,6 +1,7 @@
 package mashup.spring.elegant.search.dto
 
-data class SearchResult(
-    var id : Long,
-    var score : Float
-)
+abstract class SearchResult(
+    private val shopId : Long
+) {
+
+}

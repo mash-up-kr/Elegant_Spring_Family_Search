@@ -19,7 +19,8 @@ import kotlin.streams.toList
 @Transactional(readOnly = true)
 @Service
 class SearchService(
-    private val template : ElasticsearchRestTemplate
+    private val template : ElasticsearchRestTemplate,
+    private val mapper : ResultMapper
 ) {
     companion object{
         const val defaultPageSize =  25
@@ -67,13 +68,15 @@ class SearchService(
             .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY)
 
 
+        val result = template.search(
+                                                NativeSearchQueryBuilder()
+                                                     .withQuery(queryBuilder)
+                                                     .withPageable(
+                                                         PageRequest.of(page,defaultPageSize))
+                                                    .build(),
+                                                Shop::class.java)
 
-        return template.search(NativeSearchQueryBuilder()
-                                .withQuery(queryBuilder)
-                                .withPageable(PageRequest.of(page,defaultPageSize)).build(), Shop::class.java)
-                        .stream()
-                        .map {SearchResult(it.content.shop_id, it.score)}
-                        .toList()
+        return mapper.map(result)
     }
 
     fun searchByCategory(dto : SearchDto) : List<SearchResult>{
