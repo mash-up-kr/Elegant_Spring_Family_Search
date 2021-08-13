@@ -5,6 +5,7 @@ import mashup.spring.elegant.search.dto.SearchResult
 import org.jetbrains.annotations.NotNull
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import javax.validation.Valid
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
@@ -21,7 +22,8 @@ class SearchController (
 
         val searchByKeyword = searchService.searchByKeyword(dto)
 
-        //todo: 로깅하고 응답 래핑하고 키워드 검색 로깅하고 이것저것하기
+        println("Search Time: ${LocalDateTime.now()}, Search Keyword: $dto.term")
+
         return ResponseEntity.ok(searchByKeyword)
     }
 
