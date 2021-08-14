@@ -1,7 +1,23 @@
+#=============================
+# Spring Properties
+#=============================
+spring:
+  profiles:
+    active: local
+
+server:
+  echo: 엄준식은 살아있다.
+
+#=============================
+# ELK Properties
+#=============================
 es:
   url: localhost
   port: 9200
 
+#=============================
+# Eureka Properties
+#=============================
 # 유레카 클라이언트 아직 사용 X
 eureka:
   client:
@@ -23,7 +39,3 @@ eureka:
 #    fetch-registry: true
 #    service-url:
 #      defaultZone: http://127.0.0.1:8761/eureka
-
-
-server:
-  echo: 엄준식은 살아있다.
