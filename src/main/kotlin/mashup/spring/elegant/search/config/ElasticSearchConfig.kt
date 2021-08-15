@@ -21,10 +21,10 @@ class ElasticSearchConfig (
     private val PORT: Int,
     @Value("\${es.scheme}")
     private val SCHEME: String,
-    @Value("\${es.username}")
-    private val USERNAME: String,
-    @Value("\${es.password}")
-    private val PASSWORD: String
+//    @Value("\${es.username}")
+//    private val USERNAME: String,
+//    @Value("\${es.password}")
+//    private val PASSWORD: String
 ) {
 //    private val USERNAME: String = getEnvironment("ES_USERNAME")
 //    private val PASSWORD: String = getEnvironment("ES_PASSWORD")
@@ -36,19 +36,17 @@ class ElasticSearchConfig (
 
     private fun getRestClientBuilder() =
         RestClient.builder(HttpHost(HOST, PORT, SCHEME))
-            .setHttpClientConfigCallback {
-                    httpClientBuilder -> httpClientBuilder
-                .setDefaultCredentialsProvider(getCredentialProvider())
-            }.apply {
-                println("USERNAME : " + USERNAME)
-            }
+//            .setHttpClientConfigCallback {
+//                    httpClientBuilder -> httpClientBuilder
+//                .setDefaultCredentialsProvider(getCredentialProvider())
+//            }
 
-    private fun getCredentialProvider(): BasicCredentialsProvider {
-        val credentialsProvider = BasicCredentialsProvider()
-        credentialsProvider.setCredentials(
-            AuthScope.ANY,
-            UsernamePasswordCredentials(USERNAME, PASSWORD)
-        )
-        return credentialsProvider
-    }
+//    private fun getCredentialProvider(): BasicCredentialsProvider {
+//        val credentialsProvider = BasicCredentialsProvider()
+//        credentialsProvider.setCredentials(
+//            AuthScope.ANY,
+//            UsernamePasswordCredentials(USERNAME, PASSWORD)
+//        )
+//        return credentialsProvider
+//    }
 }
