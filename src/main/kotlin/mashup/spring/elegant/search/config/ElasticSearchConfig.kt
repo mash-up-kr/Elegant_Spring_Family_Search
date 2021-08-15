@@ -17,12 +17,14 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 @Configuration
 class ElasticSearchConfig (
     @Value("\${es.url}")
-    private val hostName: String,
+    private val HOST: String,
     @Value("\${es.port}")
-    private val port: Int
+    private val PORT: Int,
+    @Value("\${es.scheme}")
+    private val SCHEME: String
 ) {
-    private val username: String = getEnvironment("ES_USERNAME")
-    private val password: String = getEnvironment("ES_PASSWORD")
+    private val USERNAME: String = getEnvironment("ES_USERNAME")
+    private val PASSWORD: String = getEnvironment("ES_PASSWORD")
 
     @Bean
     fun elasticsearchTemplate() = ElasticsearchRestTemplate(restHighLevelClient())
@@ -30,7 +32,7 @@ class ElasticSearchConfig (
     private fun restHighLevelClient() = RestHighLevelClient(getRestClientBuilder())
 
     private fun getRestClientBuilder() =
-        RestClient.builder(HttpHost(hostName, port, "https"))
+        RestClient.builder(HttpHost(HOST, PORT, SCHEME))
             .setHttpClientConfigCallback {
                     httpClientBuilder -> httpClientBuilder
                 .setDefaultCredentialsProvider(getCredentialProvider())
@@ -40,7 +42,7 @@ class ElasticSearchConfig (
         val credentialsProvider = BasicCredentialsProvider()
         credentialsProvider.setCredentials(
             AuthScope.ANY,
-            UsernamePasswordCredentials(username, password)
+            UsernamePasswordCredentials(USERNAME, PASSWORD)
         )
         return credentialsProvider
     }

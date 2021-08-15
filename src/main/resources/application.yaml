@@ -1,6 +1,7 @@
 es:
   url: search-mashup-spring-search-5stojescxljz22frzubuuqpauu.ap-northeast-2.es.amazonaws.com
   port: 443
+  scheme: https
 
 # 유레카 클라이언트 아직 사용 X
 eureka:
@@ -38,4 +39,5 @@ spring:
 es:
   url: localhost
   port: 9200
+  scheme: http
 ---
