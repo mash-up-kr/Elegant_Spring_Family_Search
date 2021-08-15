@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - feature/cicd
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Manual build'
 
 jobs:
   build:
