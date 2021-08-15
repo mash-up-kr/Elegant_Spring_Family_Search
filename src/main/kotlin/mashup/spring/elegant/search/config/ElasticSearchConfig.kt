@@ -21,10 +21,14 @@ class ElasticSearchConfig (
     @Value("\${es.port}")
     private val PORT: Int,
     @Value("\${es.scheme}")
-    private val SCHEME: String
+    private val SCHEME: String,
+    @Value("\${es.username}")
+    private val USERNAME: String,
+    @Value("\${es.password}")
+    private val PASSWORD: String
 ) {
-    private val USERNAME: String = getEnvironment("ES_USERNAME")
-    private val PASSWORD: String = getEnvironment("ES_PASSWORD")
+//    private val USERNAME: String = getEnvironment("ES_USERNAME")
+//    private val PASSWORD: String = getEnvironment("ES_PASSWORD")
 
     @Bean
     fun elasticsearchTemplate() = ElasticsearchRestTemplate(restHighLevelClient())

@@ -40,4 +40,6 @@ es:
   url: localhost
   port: 9200
   scheme: http
+  username: mashup
+  password: mashup
 ---
