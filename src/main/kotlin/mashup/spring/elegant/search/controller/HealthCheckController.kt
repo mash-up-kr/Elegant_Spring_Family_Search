@@ -1,16 +1,16 @@
 package mashup.spring.elegant.search.controller
 
-import org.springframework.beans.factory.annotation.Autowired
+import mashup.spring.elegant.search.domain.search.Shop
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.ResponseEntity
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.RestTemplate
 
 @RestController
 class HealthCheckController (
     @Value("\${server.echo}")
     private val echo : String,
+    private val elasticsearchTemplate : ElasticsearchRestTemplate
 ){
 
     @Value("\${es.url}")
@@ -20,9 +20,10 @@ class HealthCheckController (
     fun healthCheck() = echo
 
     @GetMapping("/es")
-    fun esHealth(): ResponseEntity<String> {
-        val restTemplate: RestTemplate = RestTemplate()
+    fun esHealth(): String {
 
-        return restTemplate.getForEntity(esUrl, String::class.javaObjectType)
+        elasticsearchTemplate.indexOps(Shop::class.javaObjectType).create()
+
+        return "success"
     }
 }
