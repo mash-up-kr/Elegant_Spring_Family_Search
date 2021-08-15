@@ -31,38 +31,26 @@ class SearchService(
     }
 
     /**
-     *  Keyword Search Boost
+     * Category Search Boost
      */
-    @Value("\${search.keyword.boost.shop_name}")
-    private val SHOP_NAME_BOOST = 0f
-    @Value("\${search.keyword.boost.menu_name}")
-    private val MENU_NAME_BOOST = 0f
-    @Value("\${search.keyword.boost.menu_content}")
-    private val MENU_CONTENT_BOOST = 0f
-    @Value("\${search.keyword.boost.location}")
-    private val LOCATION_BOOST = 0f
-    @Value("\${search.keyword.location.limit}")
-    private val LOCATION_LIMIT = "0km"
-
     private val reviewFunctions by lazy { booster.getReviewBooster() }
     private val newShopFunctions by lazy { booster.getNewShopBooster() }
 
-    /**
-     * Category Search Boost
-     */
 
+    //todo: takeout 같은 추가적인 검색 쿼리는 분리가 필요할 것같다.
+    // 쿼리 빌딩은 따로 빼고 서치 서비스에서 추가적인 정보를 넣는 것으로 해야겠다.
 
     fun searchByKeyword(dto : Request) : List<Result>{
 
-
         /**
-         * DTO 중 사용 안하는 필드를 IDE 가 체크
+         * 메서드 내에서 DTO 중 사용 안하는 필드를 IDE 가 체크
          */
         val keyword = dto.term
         val area = dto.area
         val lat = dto.lat
         val lon = dto.lon
         val page = dto.page
+        val isTakeout = dto.isTakeout
 
         /**
          * Building Boost Function List
@@ -81,18 +69,13 @@ class SearchService(
                 matchQuery(MENU_NAME.field, keyword).boost(MENU_NAME_BOOST))
             .should(
                 matchQuery(MENU_CONTENT.field, keyword).boost(MENU_CONTENT_BOOST))
-            .should(
-                geoDistanceQuery(LOCATION.field)
-                    .distance(LOCATION_LIMIT)
-                    .point(lat,lon)
-                    .boost(LOCATION_BOOST))
+            .addLocationCondition(lat, lon)
+            .takeOut(isTakeout)
             .addRequiredConditions(area) // 배달가능지역, 오픈시간 체크
             .toFunctionQuery(functions, ScoreMode.SUM)
             .makeSearchQuery(page)
 
-        /**
-         * 검색 실행
-         */
+
         val result = template.search(query,Shop::class.java)
 
         return mapper.map(result)
@@ -103,10 +86,40 @@ class SearchService(
 
     fun searchByCategory(dto : Request) : List<Result>{
 
+        /**
+         * 메서드 내에서 DTO 중 사용 안하는 필드를 IDE 가 체크
+         */
+        val category = dto.term
+        val area = dto.area
+        val lat = dto.lat
+        val lon = dto.lon
+        val page = dto.page
+        val isTakeout = dto.isTakeout
 
-        // todo: 쿼리 빌딩하고 응답 예쁘게 만들어주기
 
-        return arrayListOf()
+        /**
+         * Building Boost Function List
+         */
+        val functions : ArrayList<FilterFunctionBuilder> = ArrayList()
+        functions.addAll(reviewFunctions)
+        functions.addAll(newShopFunctions)
+
+        /**
+         * Building Keyword Search Query
+         */
+        val query = boolQuery()
+            .should(
+                matchQuery(CATEGORY.field, category).boost(CATEGORY_BOOST))
+            .addLocationCondition(lat, lon)
+            .takeOut(isTakeout)
+            .addRequiredConditions(area) // 배달가능지역, 오픈시간 체크
+            .toFunctionQuery(functions, ScoreMode.SUM)
+            .makeSearchQuery(page)
+
+
+        val result = template.search(query,Shop::class.java)
+
+        return mapper.map(result)
     }
 
 
@@ -114,7 +127,7 @@ class SearchService(
 
 
     private fun FunctionScoreQueryBuilder.makeSearchQuery(page: Int)
-        = NativeSearchQueryBuilder()
+       = NativeSearchQueryBuilder()
             .withQuery(this)
             .withPageable(
                 PageRequest.of(page, DEFAULT_PAGE_SIZE)
@@ -124,17 +137,46 @@ class SearchService(
 
     private fun BoolQueryBuilder.addRequiredConditions(area: String)
        = this.must(matchQuery(DELIVERY_AREA.field, area))
-        .must(matchQuery(OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
-        .must(rangeQuery(OPEN_HOUR_HOUR.field)
-                  .gte(LocalDateTime.now().hourOfDay)
-                  .lte(LocalDateTime.now().hourOfDay)
-                  .relation("contains"))
+            .must(matchQuery(OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
+            .must(rangeQuery(OPEN_HOUR_HOUR.field)
+                      .gte(LocalDateTime.now().hourOfDay)
+                      .lte(LocalDateTime.now().hourOfDay)
+                      .relation("contains"))
+
+    private fun BoolQueryBuilder.addLocationCondition(lat : Double, lon : Double)
+       = this.should(geoDistanceQuery(LOCATION.field)
+                        .distance(LOCATION_LIMIT)
+                        .point(lat,lon)
+                        .boost(LOCATION_BOOST))
 
 
 
     private fun BoolQueryBuilder.toFunctionQuery(functions :ArrayList<FilterFunctionBuilder>,
                                                  mode: ScoreMode = ScoreMode.SUM)
-        = functionScoreQuery(this, functions.toTypedArray()).scoreMode(mode)
+       = functionScoreQuery(this, functions.toTypedArray()).scoreMode(mode)
 
+    private fun BoolQueryBuilder.takeOut(isTakeOut : Boolean)
+       = this.must(matchQuery(TAKE_OUT.field, isTakeOut))
+
+
+    /**
+     *  Keyword Search Boost
+     */
+    @Value("\${search.keyword.boost.shop_name}")
+    private val SHOP_NAME_BOOST = 0f
+    @Value("\${search.keyword.boost.menu_name}")
+    private val MENU_NAME_BOOST = 0f
+    @Value("\${search.keyword.boost.menu_content}")
+    private val MENU_CONTENT_BOOST = 0f
+    @Value("\${search.keyword.boost.location}")
+    private val LOCATION_BOOST = 0f
+    @Value("\${search.keyword.location.limit}")
+    private val LOCATION_LIMIT = "0km"
+
+    /**
+     * Category Search Boost
+     */
+    @Value("\${search.category.boost.name}")
+    private val CATEGORY_BOOST = 0f
 
 }

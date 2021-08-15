@@ -4,22 +4,22 @@ enum class ShopField (
     val field : String
 ){
 
-    SHOP_ID("shop_id"),
-    CATEGORY("category"),
-    SHOP_NAME("shop_name"),
-    REVIEW_AVG("review.avg"),
-    REVIEW_COUNT("review.count"),
-    CREATED_DATE("created_date"),
-    MENU_NAME("menu.name"),
-    MENU_CONTENT("menu.content"),
+    SHOP_ID("shop_id"), // type: Long
+    CATEGORY("category"), // type: ENUM (String)
+    SHOP_NAME("shop_name"), // type: String
+    REVIEW_AVG("review.avg"), // type: Float
+    REVIEW_COUNT("review.count"), // type: Int
+    CREATED_DATE("created_date"), // type: String(yyyy-mm-dd)
+    MENU_NAME("menu.name"), // type: String
+    MENU_CONTENT("menu.content"), // type: String
     DELIVERY_TIME("delivery_time"), //빼도 될것같은데?
     DELIVERY_TIP("delivery_tip"), //빼도 될것같은데?
-    DELIVERY_AREA("delivery_area"),
+    DELIVERY_AREA("delivery_area"), // type: String
     MIN_AMOUNT("min_amount"), //빼도 될것같은데?
-    LOCATION("location"),
-    OPEN_HOUR_WEEK("open_hour.week"),
-    OPEN_HOUR_HOUR("open_hour.hour"),
-    TAKE_OUT("take_out"); // 나중에 필요
+    LOCATION("location"), // type: GeoPoint (lat:Double, lon:Double)
+    OPEN_HOUR_WEEK("open_hour.week"), // type: String
+    OPEN_HOUR_HOUR("open_hour.hour"), // type: Range
+    TAKE_OUT("take_out"); // type: Boolean
 
 
 }
