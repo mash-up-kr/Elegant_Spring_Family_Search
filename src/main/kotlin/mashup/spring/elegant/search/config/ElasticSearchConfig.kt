@@ -1,7 +1,6 @@
 package mashup.spring.elegant.search.config
 
 
-import mashup.spring.elegant.search.util.getEnvironment
 import org.apache.http.HttpHost
 import org.apache.http.auth.AuthScope
 import org.apache.http.auth.UsernamePasswordCredentials
@@ -40,6 +39,8 @@ class ElasticSearchConfig (
             .setHttpClientConfigCallback {
                     httpClientBuilder -> httpClientBuilder
                 .setDefaultCredentialsProvider(getCredentialProvider())
+            }.apply {
+                println("USERNAME : " + USERNAME)
             }
 
     private fun getCredentialProvider(): BasicCredentialsProvider {
