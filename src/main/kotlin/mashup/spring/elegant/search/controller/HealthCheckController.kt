@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/api/v1/health-check")
 @RestController
-class TestController (
+class HealthCheckController (
     @Value("\${server.echo}")
     private val echo : String
 ){
