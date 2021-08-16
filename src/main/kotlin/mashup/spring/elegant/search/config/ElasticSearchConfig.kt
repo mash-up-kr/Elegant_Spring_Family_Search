@@ -26,8 +26,6 @@ class ElasticSearchConfig (
     @Value("\${es.password}")
     private val PASSWORD: String
 ) {
-//    private val USERNAME: String = getEnvironment("ES_USERNAME")
-//    private val PASSWORD: String = getEnvironment("ES_PASSWORD")
 
     @Bean
     fun elasticsearchTemplate() = ElasticsearchRestTemplate(restHighLevelClient())
@@ -39,7 +37,7 @@ class ElasticSearchConfig (
             .setHttpClientConfigCallback {
                     httpClientBuilder -> httpClientBuilder
                 .setDefaultCredentialsProvider(getCredentialProvider())
-            }.apply { println("USERNAME : " + USERNAME) }
+            }
 
     private fun getCredentialProvider(): BasicCredentialsProvider {
         val credentialsProvider = BasicCredentialsProvider()
