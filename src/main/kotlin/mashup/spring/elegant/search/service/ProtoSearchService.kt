@@ -1,5 +1,8 @@
-package mashup.spring.elegant.search.domain.search
+package mashup.spring.elegant.search.service
 
+import mashup.spring.elegant.search.domain.search.BoostFunction
+import mashup.spring.elegant.search.domain.search.ResultMapper
+import mashup.spring.elegant.search.domain.search.Shop
 import mashup.spring.elegant.search.domain.search.ShopField.*
 import mashup.spring.elegant.search.dto.SearchDto.*
 import mashup.spring.elegant.search.util.translateDay
@@ -20,7 +23,7 @@ import java.time.LocalDate
 
 @Transactional(readOnly = true)
 @Service
-class SearchService(
+class ProtoSearchService(
     private val template : ElasticsearchRestTemplate,
     @Qualifier("IdScoreMapper")
     private val mapper : ResultMapper,
@@ -50,7 +53,7 @@ class SearchService(
         val lat = dto.lat
         val lon = dto.lon
         val page = dto.page
-        val isTakeout = dto.isTakeout
+        //val isTakeout = dto.isTakeout
 
         /**
          * Building Boost Function List
@@ -70,13 +73,13 @@ class SearchService(
             .should(
                 matchQuery(MENU_CONTENT.field, keyword).boost(MENU_CONTENT_BOOST))
             .addLocationCondition(lat, lon)
-            .takeOut(isTakeout)
+            //.takeOut(isTakeout)
             .addRequiredConditions(area) // 배달가능지역, 오픈시간 체크
             .toFunctionQuery(functions, ScoreMode.SUM)
             .makeSearchQuery(page)
 
 
-        val result = template.search(query,Shop::class.java)
+        val result = template.search(query, Shop::class.java)
 
         return mapper.map(result)
     }
@@ -94,7 +97,7 @@ class SearchService(
         val lat = dto.lat
         val lon = dto.lon
         val page = dto.page
-        val isTakeout = dto.isTakeout
+        //val isTakeout = dto.isTakeout
 
 
         /**
@@ -111,13 +114,13 @@ class SearchService(
             .should(
                 matchQuery(CATEGORY.field, category).boost(CATEGORY_BOOST))
             .addLocationCondition(lat, lon)
-            .takeOut(isTakeout)
+            //.takeOut(isTakeout)
             .addRequiredConditions(area) // 배달가능지역, 오픈시간 체크
             .toFunctionQuery(functions, ScoreMode.SUM)
             .makeSearchQuery(page)
 
 
-        val result = template.search(query,Shop::class.java)
+        val result = template.search(query, Shop::class.java)
 
         return mapper.map(result)
     }

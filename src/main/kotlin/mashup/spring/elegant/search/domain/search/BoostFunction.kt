@@ -43,36 +43,7 @@ class BoostFunction{
         )
     )
 
-    /**
-     * Review Count Boost Constant
-     */
-    @Value("\${search.review.count.factor}")
-    private val REVIEW_CNT_FACTOR = 0f
 
-    /**
-     * Review Average Boost Constant
-     */
-    @Value("\${search.review.avg.origin}")
-    private val REVIEW_AVG_ORIGIN = 0
-    @Value("\${search.review.avg.scale}")
-    private val REVIEW_AVG_SCALE = 0
-    @Value("\${search.review.avg.offset}")
-    private val REVIEW_AVG_OFFSET = 0
-    @Value("\${search.review.avg.decay}")
-    private val REVIEW_AVG_DECAY = 0.0
-
-    @Value("\${search.new_shop.filter.from}")
-    private val NEW_FILTER_FROM = ""
-    @Value("\${search.new_shop.filter.to}")
-    private val NEW_FILTER_TO = ""
-    @Value("\${search.new_shop.score.origin}")
-    private val NEW_SCORE_ORIGIN = ""
-    @Value("\${search.new_shop.score.scale}")
-    private val NEW_SCORE_SCALE = ""
-    @Value("\${search.new_shop.score.offset}")
-    private val NEW_SCORE_OFFSET = ""
-    @Value("\${search.new_shop.score.decay}")
-    private val NEW_SCORE_DECAY = 0.0
 
 }
 

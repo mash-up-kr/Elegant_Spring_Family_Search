@@ -20,14 +20,13 @@ class SearchDto {
         @NotNull
         val lon : Double,
 
-        @NotNull
-        val isTakeout : Boolean,
-
         @NotBlank//공백 허용 x
         val area : String,
 
         @Min(value=0)
-        val page : Int
+        val page : Int,
+
+        val feature : List<String>
     )
 
 
