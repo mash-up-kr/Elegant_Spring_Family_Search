@@ -3,7 +3,7 @@ name: ci/cd-practice
 on:
   push:
     branches:
-      - feature/cicd
+      - develop
   workflow_dispatch:
     inputs:
       tags:
