@@ -3,7 +3,7 @@ package mashup.spring.elegant.search.domain.search.boost
 import org.springframework.beans.factory.annotation.Value
 
 /**
- * Function Boost 값을 읽어오기 위한 파일.
+ * Function Boost 값을 설정파일로부터 읽어오기 위한 파일
  */
 
 

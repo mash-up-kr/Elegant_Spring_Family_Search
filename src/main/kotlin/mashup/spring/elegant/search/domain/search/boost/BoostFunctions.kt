@@ -7,6 +7,14 @@ import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuild
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders
 
+
+/**
+ * Boost Function 을 모아놓은 파일
+ */
+
+/**
+ * Review 개수와 평점을 위한 부스터 펑션
+ */
 fun getReviewBooster()  = arrayOf(
     FunctionScoreQueryBuilder.FilterFunctionBuilder(
         FieldValueFactorFunctionBuilder(ShopField.REVIEW_COUNT.field)
@@ -24,6 +32,10 @@ fun getReviewBooster()  = arrayOf(
             )
     )
 )
+
+/**
+ * 신규 입점 가게를 위한 부스터 펑션
+ */
 
 fun getNewShopBooster () = arrayOf(
     FunctionScoreQueryBuilder.FilterFunctionBuilder(

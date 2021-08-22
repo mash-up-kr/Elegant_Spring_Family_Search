@@ -13,23 +13,33 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import java.time.LocalDate
 
 /**
- * Method Extension for Query Building
+ * 쿼리 빌딩을 위한 확장 함수를 모아놓은 파일
  */
 
-fun BoolQueryBuilder.addRequiredConditions(area: String): BoolQueryBuilder = this.must(QueryBuilders.matchQuery(ShopField.DELIVERY_AREA.field, area))
-    .must(QueryBuilders.matchQuery(ShopField.OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
-    .must(
-        QueryBuilders.rangeQuery(ShopField.OPEN_HOUR_HOUR.field)
-            .gte(LocalDateTime.now().hourOfDay)
-            .lte(LocalDateTime.now().hourOfDay)
-            .relation("contains"))
+/**
+ *  영업 시간, 배달가능동 조건 추가
+ */
+fun BoolQueryBuilder.addRequiredConditions(area: String): BoolQueryBuilder
+  = this.must(QueryBuilders.matchQuery(ShopField.DELIVERY_AREA.field, area))
+        .must(QueryBuilders.matchQuery(ShopField.OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
+        .must(
+            QueryBuilders.rangeQuery(ShopField.OPEN_HOUR_HOUR.field)
+                .gte(LocalDateTime.now().hourOfDay)
+                .lte(LocalDateTime.now().hourOfDay)
+                .relation("contains"))
 
-fun BoolQueryBuilder.addLocationCondition(lat : Double, lon : Double): BoolQueryBuilder = this.should(
-    QueryBuilders.geoDistanceQuery(ShopField.LOCATION.field)
-        .distance(LOCATION_LIMIT)
-        .point(lat,lon)
-        .boost(LOCATION_BOOST))
+/**
+ * 가까운 가게일수록 should 쿼리로 score 가 높게 측정된다.
+ */
+fun BoolQueryBuilder.addLocationCondition(lat : Double, lon : Double): BoolQueryBuilder
+ = this.should(QueryBuilders.geoDistanceQuery(ShopField.LOCATION.field)
+                    .distance(LOCATION_LIMIT)
+                    .point(lat,lon)
+                    .boost(LOCATION_BOOST))
 
+/**
+ *  QueryBuilder 를 페이징처리해서 쿼리로 만든다.
+ */
 fun QueryBuilder.makeSearchQuery(page: Int, size : Int)
         = NativeSearchQueryBuilder()
     .withQuery(this)

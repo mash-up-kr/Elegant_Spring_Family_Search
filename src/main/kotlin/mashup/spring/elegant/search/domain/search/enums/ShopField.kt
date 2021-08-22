@@ -1,5 +1,8 @@
 package mashup.spring.elegant.search.domain.search.enums
 
+/**
+ * Elasticsearch 내 필드 이름 Enum 클래스
+ */
 enum class ShopField (
     val field : String
 ){
