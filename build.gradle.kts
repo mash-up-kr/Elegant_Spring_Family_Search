@@ -31,6 +31,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.5")
+	implementation("net.logstash.logback:logstash-logback-encoder:5.2")
 
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

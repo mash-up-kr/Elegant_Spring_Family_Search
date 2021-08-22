@@ -1,8 +1,24 @@
+#=============================
+# Spring Properties
+#=============================
+spring:
+  profiles:
+    active: local
+
+server:
+  echo: 엄준식은 살아있다.
+
+#=============================
+# ELK Properties
+#=============================
 es:
   url: search-mashup-spring-search-5stojescxljz22frzubuuqpauu.ap-northeast-2.es.amazonaws.com
   port: 443
   scheme: https
 
+#=============================
+# Eureka Properties
+#=============================
 # 유레카 클라이언트 아직 사용 X
 eureka:
   client:
@@ -23,12 +39,12 @@ eureka:
 #    register-with-eureka: true
 #    fetch-registry: true
 #    service-url:
-#      defaultZone: http://127.0.0.1:8761/eureka
-
-
 server:
   echo: 엄준식은 살아있다.
 
+#=============================
+# Local Environment
+#=============================
 ---
 spring:
   config:
