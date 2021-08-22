@@ -1,8 +1,8 @@
 package mashup.spring.elegant.search.domain.search.factory.impl
 
-import mashup.spring.elegant.search.domain.search.SearchType
+import mashup.spring.elegant.search.domain.search.enums.SearchType
 import mashup.spring.elegant.search.domain.search.factory.FeatureQueryFactory
-import mashup.spring.elegant.search.dto.Feature
+import mashup.spring.elegant.search.domain.search.enums.Feature
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.springframework.stereotype.Component

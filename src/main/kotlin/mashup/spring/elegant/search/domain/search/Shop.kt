@@ -1,5 +1,6 @@
 package mashup.spring.elegant.search.domain.search
 
+import mashup.spring.elegant.search.domain.search.enums.Category
 import org.springframework.data.elasticsearch.annotations.*
 import org.springframework.data.elasticsearch.core.geo.GeoPoint
 
