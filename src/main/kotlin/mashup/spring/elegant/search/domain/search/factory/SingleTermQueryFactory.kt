@@ -12,5 +12,5 @@ import org.elasticsearch.index.query.QueryBuilder
  */
 
 interface SingleTermQueryFactory {
-    fun build(type: SearchType, dto :SearchDto.Request) : QueryBuilder
+    fun build(type: SearchType, dto :SearchDto.SingleTermRequest) : QueryBuilder
 }

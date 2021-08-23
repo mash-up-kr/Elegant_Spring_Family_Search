@@ -22,7 +22,10 @@ class BasicSearchService (
         const val DEFAULT_PAGE_SIZE =  25
     }
 
-    override fun search(type: SearchType, dto: SearchDto.Request) : List<SearchDto.Result>{
+    /**
+     * 검색어가 하나인 경우
+     */
+    override fun singleTermSearch(type: SearchType, dto: SearchDto.SingleTermRequest) : List<SearchDto.Result>{
 
         val query = singleFactory
                                         .build(type, dto)
@@ -32,6 +35,5 @@ class BasicSearchService (
 
         return mapper.map(result)
     }
-
 
 }

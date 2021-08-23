@@ -11,7 +11,7 @@ class SearchDto {
     /**
      * Search Controller
      */
-    class Request(
+    class SingleTermRequest(
 
         @Size(min = 2)
         val term : String,
@@ -49,7 +49,7 @@ class SearchDto {
 
         val feature : List<Feature>
     ){
-        fun toRequest() = Request(category.field, lat, lon, area, page, feature)
+        fun toRequest() = SingleTermRequest(category.field, lat, lon, area, page, feature)
     }
 
 

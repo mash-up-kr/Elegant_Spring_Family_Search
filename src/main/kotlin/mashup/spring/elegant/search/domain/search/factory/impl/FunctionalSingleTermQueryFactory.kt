@@ -21,7 +21,7 @@ class FunctionalSingleTermQueryFactory (
 ): SingleTermQueryFactory{
 
 
-    override fun build(type: SearchType, dto: SearchDto.Request): QueryBuilder
+    override fun build(type: SearchType, dto: SearchDto.SingleTermRequest): QueryBuilder
         = when(type){
             SearchType.KEYWORD, SearchType.CATEGORY ->{
 

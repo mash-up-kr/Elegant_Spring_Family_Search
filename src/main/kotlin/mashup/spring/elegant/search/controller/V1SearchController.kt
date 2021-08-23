@@ -13,9 +13,9 @@ class V1SearchController (
     private val searchService: SearchService
 ){
     @GetMapping("/keyword")
-    fun searchByKeyword(@Valid dto : SearchDto.Request) : ResponseEntity<Any>{
+    fun searchByKeyword(@Valid dto : SearchDto.SingleTermRequest) : ResponseEntity<Any>{
 
-        val searchByKeyword = searchService.search(SearchType.KEYWORD, dto)
+        val searchByKeyword = searchService.singleTermSearch(SearchType.KEYWORD, dto)
 
         //todo: 실시간 검색 Logging 들어갈 부분
 
@@ -27,7 +27,7 @@ class V1SearchController (
     fun searchByCategory(@Valid categoryDto : SearchDto.CategoryRequest) : ResponseEntity<Any>{
 
         val dto = categoryDto.toRequest()
-        val searchByKeyword = searchService.search(SearchType.CATEGORY, dto)
+        val searchByKeyword = searchService.singleTermSearch(SearchType.CATEGORY, dto)
 
         //todo: 카테고리 검색은 실시간 검색어 로깅 X
 
