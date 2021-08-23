@@ -5,7 +5,7 @@ import mashup.spring.elegant.search.domain.search.boost.MENU_CONTENT_BOOST
 import mashup.spring.elegant.search.domain.search.boost.MENU_NAME_BOOST
 import mashup.spring.elegant.search.domain.search.boost.SHOP_NAME_BOOST
 import mashup.spring.elegant.search.domain.search.enums.SearchType
-import mashup.spring.elegant.search.domain.search.enums.ShopField
+import mashup.spring.elegant.search.domain.model.ShopField
 import mashup.spring.elegant.search.domain.search.factory.QueryBaseFactory
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders

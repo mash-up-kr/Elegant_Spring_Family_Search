@@ -2,7 +2,7 @@ package mashup.spring.elegant.search.domain.search
 
 import mashup.spring.elegant.search.domain.search.boost.LOCATION_BOOST
 import mashup.spring.elegant.search.domain.search.boost.LOCATION_LIMIT
-import mashup.spring.elegant.search.domain.search.enums.ShopField
+import mashup.spring.elegant.search.domain.model.ShopField
 import mashup.spring.elegant.search.util.translateDay
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilder
@@ -19,7 +19,7 @@ import java.time.LocalDate
 /**
  *  영업 시간, 배달가능동 조건 추가
  */
-fun BoolQueryBuilder.addRequiredConditions(area: String): BoolQueryBuilder
+fun BoolQueryBuilder.addAcceptableConditions(area: String): BoolQueryBuilder
   = this.must(QueryBuilders.matchQuery(ShopField.DELIVERY_AREA.field, area))
         .must(QueryBuilders.matchQuery(ShopField.OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
         .must(

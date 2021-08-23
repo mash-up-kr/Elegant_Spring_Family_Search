@@ -1,4 +1,4 @@
-package mashup.spring.elegant.search.domain.search.enums
+package mashup.spring.elegant.search.domain.model
 
 
 /**

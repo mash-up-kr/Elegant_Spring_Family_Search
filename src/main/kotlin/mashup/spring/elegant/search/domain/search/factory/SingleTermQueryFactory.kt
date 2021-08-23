@@ -11,6 +11,6 @@ import org.elasticsearch.index.query.QueryBuilder
  * FunctionTypeQueryFactory : Base + Feature + Function Score 를 적용시킨 쿼리를 만들어낸다.
  */
 
-interface TypeQueryFactory {
+interface SingleTermQueryFactory {
     fun build(type: SearchType, dto :SearchDto.Request) : QueryBuilder
 }

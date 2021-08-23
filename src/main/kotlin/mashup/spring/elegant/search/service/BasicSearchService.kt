@@ -1,8 +1,9 @@
 package mashup.spring.elegant.search.service
 
+import mashup.spring.elegant.search.domain.model.Shop
 import mashup.spring.elegant.search.domain.search.*
 import mashup.spring.elegant.search.domain.search.enums.SearchType
-import mashup.spring.elegant.search.domain.search.factory.TypeQueryFactory
+import mashup.spring.elegant.search.domain.search.factory.SingleTermQueryFactory
 import mashup.spring.elegant.search.domain.search.mapper.ResultMapper
 import mashup.spring.elegant.search.dto.SearchDto
 import org.springframework.beans.factory.annotation.Qualifier
@@ -14,7 +15,7 @@ class BasicSearchService (
     private val template : ElasticsearchRestTemplate,
     @Qualifier("IdScoreMapper")
     private val mapper : ResultMapper,
-    private val typeFactory: TypeQueryFactory
+    private val singleFactory: SingleTermQueryFactory
 ): SearchService{
 
     companion object{
@@ -23,7 +24,7 @@ class BasicSearchService (
 
     override fun search(type: SearchType, dto: SearchDto.Request) : List<SearchDto.Result>{
 
-        val query = typeFactory
+        val query = singleFactory
                                         .build(type, dto)
                                         .makeSearchQuery(dto.page, DEFAULT_PAGE_SIZE)
 

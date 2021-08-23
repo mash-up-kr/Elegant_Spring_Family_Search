@@ -1,6 +1,6 @@
 package mashup.spring.elegant.search.dto
 
-import mashup.spring.elegant.search.domain.search.enums.Category
+import mashup.spring.elegant.search.domain.model.Category
 import mashup.spring.elegant.search.domain.search.enums.Feature
 import org.jetbrains.annotations.NotNull
 import javax.validation.constraints.Min

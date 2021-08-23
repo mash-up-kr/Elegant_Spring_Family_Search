@@ -1,6 +1,6 @@
 package mashup.spring.elegant.search.domain.search.boost
 
-import mashup.spring.elegant.search.domain.search.enums.ShopField
+import mashup.spring.elegant.search.domain.model.ShopField
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder
