@@ -14,20 +14,23 @@ import org.springframework.stereotype.Component
 @Component
 class BasicQueryBaseFactory : QueryBaseFactory {
 
-    override fun create(type: SearchType, term: String): BoolQueryBuilder
-    = when(type){
+    override fun create(type: SearchType, term: String): BoolQueryBuilder = when (type) {
 
         SearchType.KEYWORD -> QueryBuilders.boolQuery()
             .should(
-                QueryBuilders.matchQuery(ShopField.SHOP_NAME.field, term).boost(SHOP_NAME_BOOST))
+                QueryBuilders.matchQuery(ShopField.SHOP_NAME.field, term).boost(SHOP_NAME_BOOST)
+            )
             .should(
-                QueryBuilders.matchQuery(ShopField.MENU_NAME.field, term).boost(MENU_NAME_BOOST))
+                QueryBuilders.matchQuery(ShopField.MENU_NAME.field, term).boost(MENU_NAME_BOOST)
+            )
             .should(
-                QueryBuilders.matchQuery(ShopField.MENU_CONTENT.field, term).boost(MENU_CONTENT_BOOST))
+                QueryBuilders.matchQuery(ShopField.MENU_CONTENT.field, term).boost(MENU_CONTENT_BOOST)
+            )
 
 
         SearchType.CATEGORY -> QueryBuilders.boolQuery()
             .should(
-                QueryBuilders.matchQuery(ShopField.CATEGORY.field, term).boost(CATEGORY_BOOST))
+                QueryBuilders.matchQuery(ShopField.CATEGORY.field, term).boost(CATEGORY_BOOST)
+            )
     }
 }

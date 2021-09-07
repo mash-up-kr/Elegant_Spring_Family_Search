@@ -19,13 +19,13 @@ import java.time.LocalDate
 /**
  *  영업 시간, 배달가능동 조건 추가
  */
-fun BoolQueryBuilder.addAcceptableConditions(area: String): BoolQueryBuilder
+fun BoolQueryBuilder.addAcceptableConditions(area: String, now: LocalDateTime): BoolQueryBuilder
   = this.must(QueryBuilders.matchQuery(ShopField.DELIVERY_AREA.field, area))
         .must(QueryBuilders.matchQuery(ShopField.OPEN_HOUR_WEEK.field, translateDay(LocalDate.now().dayOfWeek)))
         .must(
             QueryBuilders.rangeQuery(ShopField.OPEN_HOUR_HOUR.field)
-                .gte(LocalDateTime.now().hourOfDay)
-                .lte(LocalDateTime.now().hourOfDay)
+                .gte(LocalDateTime.now())
+                .lte(LocalDateTime.now())
                 .relation("contains"))
 
 /**

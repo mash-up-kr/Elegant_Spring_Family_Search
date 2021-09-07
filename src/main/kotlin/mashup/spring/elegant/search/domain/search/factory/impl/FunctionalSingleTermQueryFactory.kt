@@ -5,9 +5,11 @@ import mashup.spring.elegant.search.domain.search.addAcceptableConditions
 import mashup.spring.elegant.search.domain.search.enums.SearchType
 import mashup.spring.elegant.search.domain.search.factory.FunctionQueryFactory
 import mashup.spring.elegant.search.domain.search.factory.QueryBaseFactory
+import mashup.spring.elegant.search.domain.search.factory.RequiredConditionFactory
 import mashup.spring.elegant.search.domain.search.factory.SingleTermQueryFactory
 import mashup.spring.elegant.search.dto.SearchDto
 import org.elasticsearch.index.query.QueryBuilder
+import org.joda.time.LocalDateTime
 import org.springframework.stereotype.Component
 
 /**
@@ -17,7 +19,8 @@ import org.springframework.stereotype.Component
 class FunctionalSingleTermQueryFactory (
     private val queryFactory : QueryBaseFactory,
     private val featureFactory : MustFeatureQueryFactory,
-    private val functionFactory : FunctionQueryFactory
+    private val functionFactory : FunctionQueryFactory,
+    private val conditionFactory: RequiredConditionFactory
 ): SingleTermQueryFactory{
 
 
@@ -26,10 +29,10 @@ class FunctionalSingleTermQueryFactory (
             SearchType.KEYWORD, SearchType.CATEGORY ->{
 
                 val boolQuery = queryFactory.create(type, dto.term)
-                                                            .addLocationCondition(dto.lat, dto.lon)
-                                                            .addAcceptableConditions(dto.area)
 
-                val featureQuery = featureFactory.create(type, dto.feature, boolQuery)
+                val conditioned = conditionFactory.create(type,dto, boolQuery)
+
+                val featureQuery = featureFactory.create(type, dto.feature, conditioned)
 
                 functionFactory.create(type, featureQuery)
             }
