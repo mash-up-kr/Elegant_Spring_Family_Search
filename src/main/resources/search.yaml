@@ -7,6 +7,9 @@ search:
       location: 3.0f
     location:
       limit: 5km
+  category:
+    boost:
+      name: 5.0f
   review:
     count:
       factor: 1.0f

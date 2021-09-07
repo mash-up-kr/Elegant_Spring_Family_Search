@@ -1,4 +1,4 @@
-package mashup.spring.elegant.search.domain.search
+package mashup.spring.elegant.search.domain.model
 
 import org.springframework.data.elasticsearch.annotations.*
 import org.springframework.data.elasticsearch.core.geo.GeoPoint

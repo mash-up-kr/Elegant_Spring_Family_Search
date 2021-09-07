@@ -102,17 +102,19 @@ PUT /shop_test
         "type": "geo_point"
       },
       "open_hour": {
+        "type": "nested",
        "properties": {
          "week": {
            "type": "keyword"
          },
          "hour": {
-           "type": "integer_range"
+           "type": "date_range"
+           "format": "HH:mm"
          }
        }
       },
-      "take_out": {
-        "type": "boolean"
+      "feature": {
+        "type": "keyword"
       }
     }
   }
