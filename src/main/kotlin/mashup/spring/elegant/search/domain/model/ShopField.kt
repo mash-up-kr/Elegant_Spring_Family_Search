@@ -23,9 +23,7 @@ enum class ShopField (
     OPEN_HOUR("open_hour"),
     OPEN_HOUR_WEEK("open_hour.week"), // type: String
     OPEN_HOUR_HOUR("open_hour.hour"), // type: Range
-    TAKE_OUT("feature.take_out"), // type: Boolean
-    ONLY_ONE("feature.only_one"), // type: Boolean
-    DISASTER("feature.disaster") // type: Boolean
+    FEATURE("feature")
 
 
 }

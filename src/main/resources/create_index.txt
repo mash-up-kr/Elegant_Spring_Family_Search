@@ -113,8 +113,8 @@ PUT /shop_test
          }
        }
       },
-      "take_out": {
-        "type": "boolean"
+      "feature": {
+        "type": "keyword"
       }
     }
   }

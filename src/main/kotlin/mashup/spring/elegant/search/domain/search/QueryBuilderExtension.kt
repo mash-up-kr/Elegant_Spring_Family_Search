@@ -5,6 +5,7 @@ import mashup.spring.elegant.search.domain.search.boost.LOCATION_LIMIT
 import mashup.spring.elegant.search.domain.model.ShopField
 import mashup.spring.elegant.search.util.translateDay
 import org.apache.lucene.search.join.ScoreMode
+import org.elasticsearch.common.geo.ShapeRelation
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders.*
@@ -30,7 +31,7 @@ fun BoolQueryBuilder.addAcceptableConditions(area: String, now: java.time.LocalD
                         rangeQuery(ShopField.OPEN_HOUR_HOUR.field)
                             .gte(LocalDateTime.now())
                             .lte(LocalDateTime.now())
-                            .relation("contains")
+                            .relation(ShapeRelation.CONTAINS.relationName)
                     ), ScoreMode.None
         )
     )

@@ -9,8 +9,8 @@ import mashup.spring.elegant.search.domain.model.ShopField.*
 enum class Feature(
     val field : String
 ) {
-    TAKEOUT(TAKE_OUT.field),
-    ONLYONE(ONLY_ONE.field), //일인분
-    DISASTER(DISASTER.field)
+    TAKEOUT("takeout"),
+    ONLYONE("onlyone"), //일인분
+    DISASTER("disaster")
 
 }
