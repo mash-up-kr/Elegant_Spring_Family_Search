@@ -20,6 +20,7 @@ enum class ShopField (
     DELIVERY_AREA("delivery_area"), // type: String
     MIN_AMOUNT("min_amount"), //빼도 될것같은데?
     LOCATION("location"), // type: GeoPoint (lat:Double, lon:Double)
+    OPEN_HOUR("open_hour"),
     OPEN_HOUR_WEEK("open_hour.week"), // type: String
     OPEN_HOUR_HOUR("open_hour.hour"), // type: Range
     TAKE_OUT("feature.take_out"), // type: Boolean
